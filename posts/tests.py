@@ -31,6 +31,10 @@ class PostTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.json()), 3)
 
+    def test_posts_related_name(self):
+        user = self.user
+        self.assertEqual(user.posts.count(), 2)
+
     def test_like_action(self):
         client = self.get_client()
         response = client.post('/api/posts/action/', {'id': 1, 'action': 'like'})

@@ -25,7 +25,7 @@ SECRET_KEY = 'x2%c_o2a-tx%q2v=omrj3c!b23y92k(k)p4hdw1x_!p72za!$z'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 LOGIN_URL = '/login'
 MAX_POST_LENGTH = 240
 POST_ACTION_OPTIONS = ['like', 'unlike']
@@ -38,13 +38,17 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'rest_framework',
     'posts.apps.PostsConfig',
+    'accounts.apps.AccountsConfig',
+    'profiles.apps.ProfilesConfig',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -121,17 +125,30 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
-DEFULT_RENDERER_CLASSES = [
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
+STATIC_ROOT = os.path.join(BASE_DIR, 'static-root')
+
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_URLS_REGEX = r'^/api/.*$'
+
+DEFAULT_AUTHENTICATION_CLASSES = [
+        'rest_framework.authentication.SessionAuthentication',
+    ]
+
+DEFAULT_RENDERER_CLASSES = [
         'rest_framework.renderers.JSONRenderer',
     ]
+
 if DEBUG: 
-    DEFULT_RENDERER_CLASSES += ['rest_framework.renderers.BrowsableAPIRenderer',]
+    DEFAULT_RENDERER_CLASSES += ['rest_framework.renderers.BrowsableAPIRenderer',]
+    # DEFAULT_AUTHENTICATION_CLASSES += ['diaries.rest_api.dev.DevAuthentication',]
+
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASS': [
         'rest_framework.permissions.AllowAny',
     ], 
-    'DEFULT_AUTHENTICATION_CLASSES':[
-        'rest_framework.authentication.SessionAuthentication',
-    ],
-    'DEFULT_RENDERER_CLASSES': DEFULT_RENDERER_CLASSES
+    'DEFAULT_AUTHENTICATION_CLASSES': DEFAULT_AUTHENTICATION_CLASSES,
+    'DEFAULT_RENDERER_CLASSES': DEFAULT_RENDERER_CLASSES
 }

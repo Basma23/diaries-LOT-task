@@ -1,5 +1,6 @@
 from django.conf import settings
 from rest_framework import serializers
+from profiles.serializers import PublicProfileSerializer
 from .models import Post
 
 MAX_POST_LENGTH = settings.MAX_POST_LENGTH
@@ -14,16 +15,25 @@ class PostActionSerializer(serializers.Serializer):
             raise serializers.ValidationError('This is not a valid action for posts')
         return value
 
-class PostSerializer(serializers.ModelSerializer):
+class PostCreateSerializer(serializers.ModelSerializer):
+    user = PublicProfileSerializer(source='user.profile', read_only=True)
     likes = serializers.SerializerMethodField(read_only=True)
     class Meta: 
         model = Post
-        fields = ['id', 'content', 'likes']
+        fields = ['id', 'user', 'timestamp', 'content', 'likes']
 
     def get_likes(self, obj):
         return obj.likes.count()
-        
-    def validate_content(self, value):
-        if len(value) > MAX_POST_LENGTH:
-            raise serializers.ValidationError('The post is too long')
-        return value
+
+    # def get_user(self, obj):
+    #     return obj.user.id
+
+class PostSerializer(serializers.ModelSerializer):
+    user = PublicProfileSerializer(source='user.profile', read_only=True)
+    likes = serializers.SerializerMethodField(read_only=True)
+    class Meta: 
+        model = Post
+        fields = ['id', 'user', 'timestamp', 'content', 'likes']
+
+    def get_likes(self, obj):
+        return obj.likes.count()

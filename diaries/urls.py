@@ -15,14 +15,24 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, re_path, include
-from posts.views import home_view, post_detail_view, post_list_view, post_create_view, post_delete_view, post_action_view
+from accounts.views import login_view, logout_view, registr_view
+from posts.views import home_view, posts_list_view, posts_detail_view
+from django.conf import settings
+from django.conf.urls.static import static
+from django.views.generic import TemplateView
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home_view),
-    path('create-post', post_create_view),
-    path('posts', post_list_view),
-    path('posts/<int:post_id>', post_detail_view),
-    # path('api/posts/action', post_action_view),
-    # path('api/posts/<int:post_id>/delete', post_delete_view),
-    path('api/posts/', include('posts.urls'))
+    path('global/', posts_list_view),
+    path('login/', login_view),
+    path('logout/', logout_view),
+    path('register/', registr_view),
+    path('<int:post_id>', posts_detail_view),
+    re_path(r'profiles?/', include('profiles.urls')),
+    path('api/posts/', include('posts.api.urls')),
+    re_path(r'api/profiles?/', include('profiles.api.urls')),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
