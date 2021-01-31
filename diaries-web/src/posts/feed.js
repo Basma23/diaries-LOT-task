@@ -8,7 +8,7 @@ export function FeedList(props) {
     const [nextUrl, setNextUrl] = useState(null)
     const [postsDidSet, setPostsDidSet] = useState(false)
     useEffect(() => {
-        const final = [...props.newPosts.concat(postsInit)]
+        const final = [...props.newPosts].concat(postsInit)
         if (final.length !== posts.length) {
             setPosts(final)
         }
@@ -30,8 +30,8 @@ export function FeedList(props) {
         if(nextUrl !== null){
             const handleLoadNextResponse = (response, status) => {
                 if (status === 200) {
-                    const newPosts = [...posts].concat(response.results)
                     setNextUrl(response.next)
+                    const newPosts = [...posts].concat(response.results)
                     setPosts(newPosts)
                     setPostsInit(newPosts)
                 }

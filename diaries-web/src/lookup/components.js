@@ -20,7 +20,7 @@ export function backendLookup(method, endpoint, callback, data){
     jsonData = JSON.stringify(data)
   }
   const xhr = new XMLHttpRequest()
-  const url = `http://localhost:8001/api${endpoint}`
+  const url = `http://localhost:8000/api${endpoint}`
   xhr.responseType = 'json'
   const csrftoken = getCookie('csrftoken');
   xhr.open(method, url)
@@ -43,7 +43,6 @@ export function backendLookup(method, endpoint, callback, data){
     callback(xhr.response, xhr.status)
   }
   xhr.onerror = function(error){
-    console.log('error', error);
     callback({'message': 'The request was an error'}, 400)
   }
   xhr.send(jsonData)

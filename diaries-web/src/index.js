@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {FeedComponent, PostsComponent, PostDetailComponent} from './posts'
+import {ProfileBadgeComponent} from './profiles'
 
 const appElement = document.getElementById('root')
 if(appElement){
@@ -29,6 +30,13 @@ const postDetailElements = document.querySelectorAll('.diaries-detail')
 postDetailElements.forEach(container => {
   ReactDOM.render(
     element(PostDetailComponent, container.dataset), container
+  );
+})
+
+const userProfileBadgeElements = document.querySelectorAll('.diaries-profile-badge')
+userProfileBadgeElements.forEach(container => {
+  ReactDOM.render(
+    element(ProfileBadgeComponent, container.dataset), container
   );
 })
 
